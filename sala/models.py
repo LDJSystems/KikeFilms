@@ -13,5 +13,9 @@ class Sesion(models.Model):
     fecha_sesion = models.DateField(verbose_name="Fecha de la sesión")
     hora_sesion = models.TimeField(verbose_name="Hora de la sesión")
 
+    class Meta:
+        verbose_name        = "Sesion"
+        verbose_name_plural = "Sesiones"
+
     def __str__(self):
         return f"Sesión - Sala {self.sala.numero_sala} ({self.fecha_sesion})"
