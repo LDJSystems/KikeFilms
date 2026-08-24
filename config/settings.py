@@ -37,6 +37,7 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    'pelicula',
     'sala',
 ]
 
@@ -76,11 +77,11 @@ WSGI_APPLICATION = 'config.wsgi.application'
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql',
-        'NAME': 'kikefilms',
-        'USER': 'lester',
-        'PASSWORD': '',
+        'NAME': 'kikefilms_db',
+        'USER': 'daniel',
+        'PASSWORD': '1223',
         'HOST': 'localhost',
-        'PORT': '5432',
+        'PORT': 5432
     }
 }
 
