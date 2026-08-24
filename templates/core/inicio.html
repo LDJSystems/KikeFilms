@@ -1,13 +1,91 @@
 {% extends "base.html" %}
-{% block title %}
-Inicio
-{% endblock %}
+
+{% block title %}KikeFilms - Cartelera Principal{% endblock %}
 
 {% block content %}
-<div class="text-center">
-    <h1>Bienvenido</h1>
-    <p class="lead">
-        Esta es la página de inicio de nuestra aplicación "KikeFilms".
-    </p>
+<!-- 1. Banner / Carrusel Principal estilo "Now Playing" -->
+{% if peliculas %}
+<div id="caribbeanCarousel" class="carousel slide mb-5 shadow-lg rounded-4 overflow-hidden border border-secondary"
+    data-bs-ride="carousel">
+    <div class="carousel-indicators">
+        {% for pelicula in peliculas|slice:":3" %}
+        <button type="button" data-bs-target="#caribbeanCarousel" data-bs-slide-to="{{ forloop.counter0 }}" {% if
+            forloop.first %}class="active" aria-current="true" aria-label="Slide { forloop.counter }"></button>
+        {% endfor %}
+    </div>
+
+    <div class="carousel-inner">
+        {% for pelicula in peliculas|slice:":3" %}
+        <div class="carousel-item {% if forloop.first %}active{% endif %}">
+            {% if pelicula.portada_imagen %}
+            <img src="{{ pelicula.portada_imagen.url }}" class="d-block w-100 object-fit-cover opacity-75"
+                alt="{{ pelicula.titulo }}" style="height: 480px;">
+            {% else %}
+            <img src="https://via.placeholder.com/1200x480?text=KikeFilms+Estreno"
+                class="d-block w-100 object-fit-cover opacity-75" alt="Sin imagen" style="height: 480px;">
+            {% endif %}
+            <div class="carousel-caption d-md-block bg-dark bg-opacity-75 rounded-3 p-4 mx-auto mb-3"
+                style="max-width: 700px;">
+                <span class="badge bg-danger mb-2 px-3 py-2 text-uppercase">En Cartelera</span>
+                <h2 class="fw-bold text-white display-6">{{ pelicula.titulo }}</h2>
+                <p class="text-light d-none d-sm-block">{{ pelicula.sinopsis|truncatechars:120 }}</p>
+                <div class="text-info small fw-bold">Duración: {{ pelicula.duracion }} min</div>
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+
+    <button class="carousel-control-prev" type="button" data-bs-target="#caribbeanCarousel" data-bs-slide="prev">
+        <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+        <span class="visually-hidden">Anterior</span>
+    </button>
+    <button class="carousel-control-next" type="button" data-bs-target="#caribbeanCarousel" data-bs-slide="next">
+        <span class="carousel-control-next-icon" aria-hidden="true"></span>
+        <span class="visually-hidden">Siguiente</span>
+    </button>
+</div>
+{% endif %}
+
+<!-- 2. Cabecera de Sección: En Cartelera -->
+<div class="d-flex align-items-center justify-content-between mb-4 border-bottom border-secondary pb-3">
+    <h3 class="fw-bold text-white m-0 text-uppercase border-start border-4 border-danger ps-3">
+        En Cartelera
+    </h3>
+    <span class="text-muted small">Explora todos los títulos disponibles</span>
+</div>
+
+<!-- 3. Cuadrícula de Pósters (Grid estilo cine) -->
+<div class="row row-cols-2 row-cols-md-4 row-cols-lg-5 g-4">
+    {% for pelicula in peliculas %}
+    <div class="col">
+        <div class="card h-100 bg-dark text-white border-0 shadow">
+            <div class="position-relative overflow-hidden rounded shadow-sm" style="background-color: #1a1a1a;">
+                {% if pelicula.portada_imagen %}
+                <img src="{{ pelicula.portada_imagen.url }}" class="card-img-top object-fit-cover"
+                    alt="{{ pelicula.titulo }}" style="height: 320px;">
+                {% else %}
+                <img src="https://via.placeholder.com/300x450?text=Sin+Portada" class="card-img-top object-fit-cover"
+                    alt="Sin portada" style="height: 320px;">
+                {% endif %}
+                <span
+                    class="position-absolute top-0 end-0 m-2 badge bg-dark bg-opacity-75 border border-secondary text-info">
+                    {{ pelicula.duracion }}m
+                </span>
+            </div>
+            <div class="card-body px-1 py-3 d-flex flex-column">
+                <h6 class="card-title fw-bold text-truncate text-light mb-1" title="{{ pelicula.titulo }}">{{
+                    pelicula.titulo }}</h6>
+                <p class="card-text text-muted small mb-0">Estreno: {{ pelicula.fecha_lanzamiento|date:"d M, Y" }}</p>
+            </div>
+        </div>
+    </div>
+    {% empty %}
+    <div class="col-12 text-center py-5">
+        <div class="alert alert-dark border border-secondary text-light mb-0 py-4" role="alert">
+            <h5 class="fw-bold text-danger">No hay películas en cartelera</h5>
+            <p class="mb-0 text-muted">No hay titulos disponibles. Vuelve más tarde </p>
+        </div>
+    </div>
+    {% endfor %}
 </div>
 {% endblock %}

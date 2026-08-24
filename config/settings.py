@@ -77,11 +77,11 @@ WSGI_APPLICATION = 'config.wsgi.application'
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql',
-        'NAME': 'kikefilms_db',
-        'USER': 'daniel',
-        'PASSWORD': '1223',
-        'HOST': 'localhost',
-        'PORT': 5432
+        'NAME': 'kikefilms',
+        'USER': 'lester',
+        'PASSWORD': '40233469812',
+        'HOST': '127.0.0.1',
+        'PORT': '5432',
     }
 }
 
