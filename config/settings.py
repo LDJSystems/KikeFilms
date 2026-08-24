@@ -54,6 +54,8 @@ MIDDLEWARE = [
 ]
 
 ROOT_URLCONF = 'config.urls'
+MEDIA_URL = "media/"
+MEDIA_ROOT = BASE_DIR / "media"
 
 TEMPLATES = [
     {
@@ -86,8 +88,6 @@ DATABASES = {
         'PORT': os.getenv('DB_PORT', ''),
     }
 }
-
-
 # Password validation
 # https://docs.djangoproject.com/en/6.1/ref/settings/#auth-password-validators
 
