@@ -4,8 +4,6 @@ from django.db import models
 from .models import Pelicula, Director, Genero
 from .models import obtener_fecha_limite
 
-# Register your models here.
-
 @admin.register(Pelicula)
 
 class PeliculasAdmin(admin.ModelAdmin):
@@ -16,7 +14,7 @@ class PeliculasAdmin(admin.ModelAdmin):
         },
     }
 
-    filter_horizontal = ("genero",) # Organiza dos bloques de filtros para la seleccion del genero de la pelicula
+    filter_horizontal = ("genero",) 
 
     list_display = (
         "titulo",
@@ -24,10 +22,10 @@ class PeliculasAdmin(admin.ModelAdmin):
         "duracion",
         "fecha_lanzamiento",
     )
-
+    
     search_fields = (
-        "titulo",
-        "director",
+    "titulo",
+    "director__nombre",
     )
 
     list_filter = (

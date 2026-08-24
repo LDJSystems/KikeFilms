@@ -1,7 +1,7 @@
 from django.urls import path
-from .views import PeliculaCreateView
+from .views import PeliculaCreateView, InicioView
 
 urlpatterns = [
     path('agregar/', PeliculaCreateView.as_view(), name='pelicula_create'),
-    path('', PeliculaCreateView.as_view(), name='pelicula_list'),
+    path('', InicioView.as_view(), name='inicio'),
 ]
