@@ -41,7 +41,7 @@ class Genero(models.Model):
         return self.nombre_genero
 
 class Pelicula(models.Model):
-    portada_imagen    = models.ImageField(blank = True, null = True, upload_to = "pelicula/")
+    portada_imagen    = models.ImageField(blank = True, null = True, upload_to = "./pelicula")
     titulo            = models.CharField("Titulo", max_length = 255)
     genero            = models.ManyToManyField(Genero)
     duracion          = models.IntegerField("Duracion")
