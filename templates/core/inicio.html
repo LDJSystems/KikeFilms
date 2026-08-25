@@ -10,7 +10,7 @@
 
     <div class="carousel-indicators">
         {% for pelicula in peliculas|slice:":3" %}
-        <button type="button" data-bs-target="#kikeCarousel" data-bs-slide-to="{{ forloop.counter0 }}"
+        <button type="button" data-bs-target="#kikeCarousel" data-bs-slide-to="{{ forloop.counter1 }}"
             class="{% if forloop.first %}active{% endif %}"></button>
         {% endfor %}
     </div>

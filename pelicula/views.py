@@ -19,4 +19,5 @@ def agregar_pelicula(request):
 #Listado de Peliculas
 def listar_peliculas(request):
     peliculas = Pelicula.objects.all()
+    print(peliculas)
     return render(request, 'pelicula/lista.html', {'peliculas' : peliculas})
