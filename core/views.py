@@ -1,8 +1,5 @@
-from django.views.generic import ListView
-from pelicula.models import Pelicula
+from django.shortcuts import render
 
-class HomeView(ListView):
-    model = Pelicula
-    template_name = "core/inicio.html"
-    context_object_name = 'peliculas'
-    ordering = ['-fecha_lanzamiento']
+# Create your views here.
+def inicio(request):
+    return render(request, 'core/inicio.html')

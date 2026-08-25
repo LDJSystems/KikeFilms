@@ -1,0 +1,36 @@
+{% extends "base.html" %}
+
+{% block titulo %}
+    Cartelera de Peliculas
+{% endblock %}
+
+{% block content %}
+<h2>Listado</h2>
+    Agregar Pelicula
+<table class="table table-striped">
+    <thead>
+        <tr>
+            <th>Titulo</th>
+            <th>Director</th>
+            <th>Duracion</th>
+            <th>Sinopsis</th>
+        </tr>
+    </thead>
+    <tbody>
+    {% for pelicula in peliculas %}
+        <tr>
+            <td>{{ pelicula.titulo }}</td>
+            <td>{{ pelicula.director }}</td>
+            <td>{{ pelicula.duracion }}</td>
+            <td>{{ pelicula.sinopsis }}</td>
+        </tr>
+    {% empty %}
+        <tr>
+            <td colspan = "5">
+                No existen peliculas registrados
+            </td>
+        </tr>
+    {% endfor %}
+    </tbody>
+</table>
+{% endblock %}

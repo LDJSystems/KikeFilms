@@ -1,0 +1,19 @@
+{% extends "base.html" %}
+
+{% block title %}
+    Agregar Película
+{% endblock %}
+
+{% block content %}
+    <h1>Añadir nueva película al catálogo</h1>
+    
+    <!-- El formulario -->
+    <form method="post">
+        {% csrf_token %}
+        
+        {{ form.as_p }}
+        
+        <button type="submit">Guardar Película</button>
+        <a href="/">Cancelar</a>
+    </form>
+{% endblock %}
