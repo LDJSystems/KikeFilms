@@ -1,36 +1,39 @@
 {% extends "base.html" %}
 
 {% block titulo %}
-    Cartelera de Peliculas
+Cartelera de Peliculas
 {% endblock %}
 
 {% block content %}
 <h2>Listado</h2>
-    Agregar Pelicula
-<table class="table table-striped">
-    <thead>
-        <tr>
-            <th>Titulo</th>
-            <th>Director</th>
-            <th>Duracion</th>
-            <th>Sinopsis</th>
-        </tr>
-    </thead>
-    <tbody>
+<div class="d-grid gap-2 d-md-flex justify-content-md-end">
+    <button type="button" class="btn btn-primary">Agregar Pelicula</button>
+</div>
+
+<div class="row row-cols-3 row-cols-md-4 row-cols-lg-3 g-4 mb-5">
+
     {% for pelicula in peliculas %}
-        <tr>
-            <td>{{ pelicula.titulo }}</td>
-            <td>{{ pelicula.director }}</td>
-            <td>{{ pelicula.duracion }}</td>
-            <td>{{ pelicula.sinopsis }}</td>
-        </tr>
+
+    <div class="col">
+        <div class="card">
+            <div class="card-body">
+
+                <img src="{{ pelicula.portada_imagen.url }}" class="card-img-top" alt="">
+
+                <h2 class="card-title">{{ pelicula.titulo }}</h2>
+                <p class="card-text">Resumen: {{ pelicula.sinopsis }}</p>
+                <p class="card-text">Director: {{ pelicula.director }}</p>
+                <p class="card-text">Duracion: {{ pelicula.duracion }} Minutos</p>
+
+            </div>
+        </div>
+    </div>
     {% empty %}
-        <tr>
-            <td colspan = "5">
-                No existen peliculas registrados
-            </td>
-        </tr>
+    <h2>
+        No existen peliculas registrados
+    </h2>
+
     {% endfor %}
-    </tbody>
-</table>
+
+</div>
 {% endblock %}
