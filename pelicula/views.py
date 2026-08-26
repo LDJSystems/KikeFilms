@@ -18,7 +18,7 @@ def agregar_pelicula(request):
             return redirect('listar_peliculas')
     else:
         formulario = PeliculaForm()
-    return render(request, 'pelicula/nuevo.html', {'formulario' : formulario})
+    return render(request, 'pelicula/nueva_pelicula.html', {'formulario' : formulario})
 
 #Listado de Peliculas
 def listar_peliculas(request):
