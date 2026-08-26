@@ -10,7 +10,7 @@
 
     <div class="carousel-indicators">
         {% for pelicula in peliculas|slice:":3" %}
-        <button type="button" data-bs-target="#kikeCarousel" data-bs-slide-to="{{ forloop.counter1 }}"
+        <button type="button" data-bs-target="#kikeCarousel" data-bs-slide-to="{{ forloop.counter0 }}"
             class="{% if forloop.first %}active{% endif %}"></button>
         {% endfor %}
     </div>
@@ -57,7 +57,7 @@
 </div>
 {% endif %}
 
-<!-- 2. Cabecera de Sección -->
+<!-- 2. Cabecera de Sección (Sin el botón, movido al Navbar) -->
 <div class="d-flex align-items-center justify-content-between mb-4 border-bottom border-secondary pb-3">
     <h3 class="fw-bold text-white m-0 text-uppercase border-start border-4 border-danger ps-3">
         Catálogo Completo
