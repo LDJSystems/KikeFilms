@@ -1,17 +1,21 @@
 from django.shortcuts import render, redirect
 from django.shortcuts import get_object_or_404
+from django.contrib.auth.decorators import login_required
+from core.decorators import gestor_required
 from .models import Pelicula
 from .forms import PeliculaForm
 
 # Create your views here.
 
 #Crear nueva pelicula
+@login_required
+@gestor_required
 def agregar_pelicula(request):
     if request.method == 'POST':
         formulario = PeliculaForm(request.POST)
         if formulario.is_valid():
             formulario.save()
-            return redirect('pelicula')
+            return redirect('listar_peliculas')
     else:
         formulario = PeliculaForm()
     return render(request, 'pelicula/nuevo.html', {'formulario' : formulario})

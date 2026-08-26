@@ -4,34 +4,50 @@
         <a class="navbar-brand fw-bold text-danger text-uppercase tracking-wider" href="/">
             <i class="bi bi-film me-2"></i>KikeFilms
         </a>
-        
+
         <!-- Botón responsive para móviles -->
-        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#kikeNavbar" aria-controls="kikeNavbar" aria-expanded="false" aria-label="Toggle navigation">
+        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#kikeNavbar"
+            aria-controls="kikeNavbar" aria-expanded="false" aria-label="Toggle navigation">
             <span class="navbar-toggler-icon"></span>
         </button>
 
         <!-- Elementos del menú -->
         <div class="collapse navbar-collapse" id="kikeNavbar">
-            <ul class="navbar-nav me-auto mb-2 mb-lg-0 align-items-lg-center">
+            <ul class="navbar-nav me-auto mb-2 mb-lg-0">
                 <li class="nav-item">
                     <a class="nav-link" href="{% url 'listar_peliculas' %}">Cartelera</a>
                 </li>
-
-                <!-- BOTÓN CONDICIONAL: Solo para Gestores y Superusuarios -->
-                {% if user.is_authenticated and user.is_superuser or user.is_staff %}
+            </ul>
+            <!-- Buscador -->
+            <form class="d-flex" role="search" method="GET" action="">
+                <input class="form-control form-control-sm bg-dark text-white border-secondary me-2" type="search"
+                    placeholder="Buscar película..." aria-label="Search" name="q">
+                <button class="btn btn-outline-danger btn-sm text-nowrap" type="submit">Buscar</button>
+            </form>
+            <ul class="navbar-nav">
+                {% if user.is_authenticated %}
                 <li class="nav-item">
-                    <a class="nav-link text-danger fw-bold" href="{% url 'agregar_pelicula' %}">
-                        <i class="bi bi-plus-circle me-1"></i>+ Añadir Película
+                    <span class="navbar-text me-3">
+                        {{ user.username }}
+                    </span>
+                </li>
+                <li class="nav-item">
+                    <form action="{% url 'logout' %}" method="post" class="d-inline">
+                        {% csrf_token %}
+                        <button type="submit" class="btn btn-outline-light btn-sm">
+                            Cerrar sesión
+                        </button>
+                    </form>
+                </li>
+                {% else %}
+                <li class="nav-item">
+                    <a href="{% url 'login' %}" class="btn btn-outline-light btn-sm">
+
+                        Iniciar sesión
                     </a>
                 </li>
                 {% endif %}
             </ul>
-
-            <!-- Buscador -->
-            <form class="d-flex" role="search" method="GET" action="">
-                <input class="form-control form-control-sm bg-dark text-white border-secondary me-2" type="search" placeholder="Buscar película..." aria-label="Search" name="q">
-                <button class="btn btn-outline-danger btn-sm text-nowrap" type="submit">Buscar</button>
-            </form>
         </div>
     </div>
 </nav>
