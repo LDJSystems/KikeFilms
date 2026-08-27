@@ -3,8 +3,8 @@
 {% block title %}KikeFilms - Cartelera Principal{% endblock %}
 
 {% block content %}
-<!-- 1. Carrusel Principal -->
-{% if peliculas %}
+<!-- 1. Carrusel Principal (Solo se muestra cuando NO hay una búsqueda activa) -->
+{% if peliculas and not q %}
 <div id="kikeCarousel" class="carousel slide mb-5 shadow-lg rounded-4 overflow-hidden border border-secondary"
     data-bs-ride="carousel">
 
@@ -57,12 +57,23 @@
 </div>
 {% endif %}
 
-<!-- 2. Cabecera de Sección (Sin el botón, movido al Navbar) -->
+<!-- 2. Cabecera de Sección (Cambia dinámicamente si hay búsqueda) -->
 <div class="d-flex align-items-center justify-content-between mb-4 border-bottom border-secondary pb-3">
-    <h3 class="fw-bold text-white m-0 text-uppercase border-start border-4 border-danger ps-3">
-        Catálogo Completo
-    </h3>
-    <span class="text-muted small">Haz clic en una película para ver sus detalles</span>
+    {% if q %}
+        <div>
+            <h3 class="fw-bold text-white m-0 text-uppercase border-start border-4 border-danger ps-3">
+                Resultados para: <span class="text-danger">"{{ q }}"</span>
+            </h3>
+        </div>
+        <a href="{% url 'listar_peliculas' %}" class="btn btn-outline-secondary btn-sm">
+            <i class="bi bi-x-lg me-1"></i>Limpiar búsqueda
+        </a>
+    {% else %}
+        <h3 class="fw-bold text-white m-0 text-uppercase border-start border-4 border-danger ps-3">
+            Catálogo Completo
+        </h3>
+        <span class="text-muted small">Haz clic en una película para ver sus detalles</span>
+    {% endif %}
 </div>
 
 <!-- 3. Cuadrícula de Películas Estilo Cine con Modal Interactivo -->
@@ -159,10 +170,19 @@
         </div>
     </div>
     {% empty %}
+    <!-- Mensaje adaptativo según si es una búsqueda sin resultados o la base de datos vacía -->
     <div class="col-12 text-center py-5">
-        <div class="alert alert-dark border border-secondary text-light mb-0 py-4" role="alert">
-            <h5 class="fw-bold text-danger">No hay películas registradas</h5>
-            <p class="mb-0 text-muted">Añade títulos desde el panel de administración.</p>
+        <div class="alert alert-dark border border-secondary text-light mb-0 py-4 shadow-sm" role="alert">
+            {% if q %}
+                <h5 class="fw-bold text-danger mb-2">No se encontraron películas para "{{ q }}"</h5>
+                <p class="mb-3 text-muted">Intenta con otro término o revisa la ortografía.</p>
+                <a href="{% url 'listar_peliculas' %}" class="btn btn-outline-danger btn-sm">
+                    Ver catálogo completo
+                </a>
+            {% else %}
+                <h5 class="fw-bold text-danger">No hay películas registradas</h5>
+                <p class="mb-0 text-muted">Añade títulos desde el panel de administración.</p>
+            {% endif %}
         </div>
     </div>
     {% endfor %}

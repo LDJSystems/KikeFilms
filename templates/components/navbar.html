@@ -1,7 +1,7 @@
 {% load auth_extras %}
 <nav class="navbar navbar-expand-lg navbar-dark bg-dark border-bottom border-secondary shadow-sm sticky-top">
     <div class="container">
-        <!-- Logo / Marca -->
+        <!-- Logo -->
         <a class="navbar-brand fw-bold text-danger text-uppercase tracking-wider" href="/">
             <i class="bi bi-film me-2"></i>KikeFilms
         </a>
@@ -31,7 +31,8 @@
             <!-- Buscador -->
             <form class="d-flex me-3" role="search" method="GET" action="{% url 'listar_peliculas' %}">
                 <input class="form-control form-control-sm bg-dark text-white border-secondary me-2" type="search"
-                    placeholder="Buscar película..." aria-label="Search" name="q">
+                    placeholder="Buscar película..." aria-label="Search" name="q"
+                    value="{{ request.GET.q|default:'' }}">
                 <button class="btn btn-outline-danger btn-sm text-nowrap" type="submit">Buscar</button>
             </form>
 
@@ -53,7 +54,6 @@
                 {% else %}
                 <li class="nav-item">
                     <a href="{% url 'login' %}" class="btn btn-outline-light btn-sm">
-
                         Iniciar sesión
                     </a>
                 </li>

@@ -3,5 +3,10 @@ from pelicula.models import Pelicula
 
 # Create your views here.
 def inicio(request):
-    peliculas = Pelicula.objects.all()
-    return render(request, 'core/inicio.html', {'peliculas' : peliculas})
+    query = request.GET.get('q', '').strip()
+    if query:
+        peliculas = Pelicula.objects.filter(titulo__icontains=query)
+    else:
+        peliculas = Pelicula.objects.all()
+
+    return render(request, 'core/inicio.html', {'peliculas' : peliculas, 'q': query})
