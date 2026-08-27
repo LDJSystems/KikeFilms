@@ -108,7 +108,7 @@ Cartelera de Peliculas
                 <div class="modal-footer border-secondary justify-content-between">
                     {% if user|is_gestor%}
                     <div class="d-grid gap-2 d-md-block">
-                        <button class="btn btn-warning" type="button">Modificar</button>
+                        <a class="btn btn-warning" href="{% url 'modificar_pelicula' pelicula.pk %}" type="button">Modificar</a>
                         <button class="btn btn-danger" type="button">Eliminar</button>
                     </div>
                     {% endif %}

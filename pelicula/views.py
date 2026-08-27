@@ -25,3 +25,24 @@ def listar_peliculas(request):
     peliculas = Pelicula.objects.all()
     print(peliculas)
     return render(request, 'pelicula/lista.html', {'peliculas' : peliculas})
+
+#Modificar Peliculas
+@login_required
+@gestor_required
+def modificar_pelicula(request, pk):
+    pelicula = get_object_or_404(Pelicula, pk = pk)
+
+    if request.method == 'POST':
+        formulario = PeliculaForm(
+            request.POST, 
+            request.FILES,
+            instance = pelicula
+        )
+
+        if formulario.is_valid():
+            formulario.save()
+            return redirect('listar_peliculas')
+    else:
+        formulario = PeliculaForm(instance = pelicula)
+
+    return render(request, "pelicula/nueva_pelicula.html", {"formulario" : formulario})
