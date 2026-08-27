@@ -6,9 +6,6 @@ Cartelera de Peliculas
 
 {% block content %}
 <h2>Listado</h2>
-<div class="d-grid gap-2 d-md-flex justify-content-md-end">
-    <button type="button" class="btn btn-primary">Agregar Pelicula</button>
-</div>
 
 <div class="row row-cols-2 row-cols-md-4 row-cols-lg-5 g-4 mb-5">
     {% for pelicula in peliculas %}
@@ -71,6 +68,17 @@ Cartelera de Peliculas
                             <div class="mb-3">
                                 <span class="badge bg-danger me-2">Año: {{ pelicula.fecha_lanzamiento|date:"Y" }}</span>
                                 <span class="badge bg-secondary me-2">Duración: {{ pelicula.duracion }} min</span>
+                                
+                                <span class="badge bg-danger me-2">Géneros:</span>
+                                {% for genero in pelicula.genero.all %}
+                                <span class="badge bg-secondary me-1">
+                                    {{ genero }}
+                                </span>
+                                {% empty %}
+                                <span class="badge bg-secondary">
+                                    No especificado
+                                </span>
+                                {% endfor %}
                             </div>
 
                             <!-- Director blindado contra errores -->
