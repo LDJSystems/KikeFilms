@@ -12,7 +12,7 @@ from .forms import PeliculaForm
 @gestor_required
 def agregar_pelicula(request):
     if request.method == 'POST':
-        formulario = PeliculaForm(request.POST)
+        formulario = PeliculaForm(request.POST, request.FILES)
         if formulario.is_valid():
             formulario.save()
             return redirect('listar_peliculas')
