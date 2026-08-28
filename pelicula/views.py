@@ -1,6 +1,7 @@
 from django.shortcuts import render, redirect
 from django.shortcuts import get_object_or_404
 from django.contrib.auth.decorators import login_required
+from django.contrib import messages
 from core.decorators import gestor_required
 from .models import Pelicula
 from .forms import PeliculaForm
@@ -26,23 +27,38 @@ def listar_peliculas(request):
     print(peliculas)
     return render(request, 'pelicula/lista.html', {'peliculas' : peliculas})
 
-#Modificar Peliculas
+#Modificar Pelicula
 @login_required
 @gestor_required
 def modificar_pelicula(request, pk):
-    pelicula = get_object_or_404(Pelicula, pk = pk)
+    pelicula = get_object_or_404(Pelicula, pk = pk) #Recoge la pk de la pelicula que recibio y la busca en la base de datos
+                                                    #Si no la encuentra, se detiene la ejecucion 
 
-    if request.method == 'POST':
+    if request.method == 'POST': #Valido que el formulario no se haya enviado vacio
         formulario = PeliculaForm(
             request.POST, 
             request.FILES,
-            instance = pelicula
+            instance = pelicula 
         )
 
-        if formulario.is_valid():
+        if formulario.is_valid(): #Valido que se esten cumpliendo todas las reglas del modelo
             formulario.save()
+            messages.success(request, 'Pelicula Modificada con exito!')
             return redirect('listar_peliculas')
     else:
         formulario = PeliculaForm(instance = pelicula)
 
     return render(request, "pelicula/nueva_pelicula.html", {"formulario" : formulario})
+
+#Eliminar Pelicula
+@login_required
+@gestor_required
+def eliminar_pelicula(request, pk):
+    pelicula = get_object_or_404(Pelicula, pk = pk)
+
+    if request.method == 'POST':
+        pelicula.delete()
+        messages.success(request, 'Pelicula Eliminada con exito!')
+        return redirect('listar_peliculas')
+
+    return render(request, 'pelicula/', {'pelicula' : pelicula})

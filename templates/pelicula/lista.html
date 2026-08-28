@@ -108,8 +108,10 @@ Cartelera de Peliculas
                 <div class="modal-footer border-secondary justify-content-between">
                     {% if user|is_gestor%}
                     <div class="d-grid gap-2 d-md-block">
-                        <a class="btn btn-warning" href="{% url 'modificar_pelicula' pelicula.pk %}" type="button">Modificar</a>
-                        <button class="btn btn-danger" type="button">Eliminar</button>
+                        <a class="btn btn-warning" href="{% url 'modificar_pelicula' pelicula.pk %}"
+                            type="button">Modificar</a>
+                        <a class="btn btn-danger" data-bs-toggle="modal"
+                            data-bs-target="#eliminarModal{{ pelicula.pk }}" type="button">Eliminar</a>
                     </div>
                     {% endif %}
                     <button type="button" class="btn btn-outline-light btn-sm" data-bs-dismiss="modal">Cerrar</button>
@@ -117,6 +119,44 @@ Cartelera de Peliculas
             </div>
         </div>
     </div>
+    <!-- Modal de confirmacion de eliminar pelicula -->
+    <div class="modal fade" id="eliminarModal{{ pelicula.pk }}" tabindex="-1" aria-hidden="true">
+
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content bg-dark text-white">
+
+                <div class="modal-header">
+                    <h5 class="modal-title">Eliminar película</h5>
+
+                    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal">
+                    </button>
+                </div>
+
+                <div class="modal-body">
+                    <p>
+                        ¿Seguro que deseas eliminar
+                        <strong>{{ pelicula.titulo }}</strong>?
+                    </p>
+                </div>
+
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">
+                        Cancelar
+                    </button>
+
+                    <form method="POST" action="{% url 'eliminar_pelicula' pelicula.pk %}">
+                        {% csrf_token %}
+
+                        <button type="submit" class="btn btn-danger">
+                            Sí, eliminar
+                        </button>
+                    </form>
+                </div>
+
+            </div>
+        </div>
+    </div>
+    <!-- Fin del modal de eliminar -->
     {% empty %}
     <div class="col-12 text-center py-5">
         <div class="alert alert-dark border border-secondary text-light mb-0 py-4" role="alert">
