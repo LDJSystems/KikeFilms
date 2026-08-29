@@ -1,0 +1,51 @@
+{% extends "base.html" %}
+
+{% block content %}
+
+<h2>Nueva sesión</h2>
+
+<form method="POST">
+    {% csrf_token %}
+    {% if formulario.non_field_errors %}
+    <div class="alert alert-danger">
+        {{ formulario.non_field_errors }}
+    </div>
+    {% endif %}
+    <div class="container">
+        <div class="row justify-content-center">
+            <div class="col-lg-8">
+
+                <div class="mb-3">
+                    {{ formulario.pelicula.label_tag }}
+                    {{ formulario.pelicula }}
+                </div>
+
+                <div class="mb-3">
+                    {{ formulario.sala.label_tag }}
+                    {{ formulario.sala }}
+                </div>
+
+                <div class="row">
+                    <div class="col-md-6 mb-3">
+                        {{ formulario.fecha_sesion.label_tag }}
+                        {{ formulario.fecha_sesion }}
+                    </div>
+
+                    <div class="col-md-6 mb-3">
+                        {{ formulario.hora_sesion.label_tag }}
+                        {{ formulario.hora_sesion }}
+                    </div>
+                </div>
+
+                <div class="d-flex justify-content-end">
+                    <button type="submit" class="btn btn-primary">
+                        Guardar sesión
+                    </button>
+                </div>
+
+            </div>
+        </div>
+    </div>
+</form>
+
+{% endblock %}

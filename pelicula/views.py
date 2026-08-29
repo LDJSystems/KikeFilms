@@ -16,6 +16,7 @@ def agregar_pelicula(request):
         formulario = PeliculaForm(request.POST, request.FILES)
         if formulario.is_valid():
             formulario.save()
+            messages.success(request, "Pelicula añadida con exito!")
             return redirect('listar_peliculas')
     else:
         formulario = PeliculaForm()

@@ -20,12 +20,17 @@
         {% if messages %}
         <div class="container mt-3">
             {% for message in messages %}
-            <div class="alert alert-success alert-dismissible fade show" role="alert">
-                {{ message }}
 
-                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Cerrar">
-                </button>
+            {% if message.tags == 'error' %}
+            <div class="alert alert-danger">
+                {{ message }}
             </div>
+            {% else %}
+            <div class="alert alert-success">
+                {{ message }}
+            </div>
+            {% endif %}
+
             {% endfor %}
         </div>
         {% endif %}
