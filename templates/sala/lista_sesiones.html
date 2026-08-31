@@ -1,152 +1,137 @@
 {% extends 'base.html' %}
 {% load auth_extras %}
 
-{% block title %}
-Listado de Sesiones
-{% endblock %}
+{% block title %}Listado de Sesiones{% endblock %}
 
 {% block content %}
-<h2>Listado de Sesiones</h2>
-<table class="table table-dark table-striped">
+<div class="d-flex align-items-center justify-content-between mb-4 border-bottom border-secondary pb-3">
+    <h3 class="fw-bold text-white m-0 text-uppercase border-start border-4 border-danger ps-3">
+        Gestión de Sesiones
+    </h3>
+    {% if user|is_gestor %}
+    <a href="{% url 'agregar_sesion' %}" class="btn btn-danger btn-sm">
+        <i class="bi bi-plus-lg me-1"></i>Nueva Sesión
+    </a>
+    {% endif %}
+</div>
 
-    <thead>
-        <tr>
-            <th>Película</th>
-            <th>Sala</th>
-            <th>Fecha</th>
-            <th>Hora</th>
-            <th>Acciones</th>
-        </tr>
-    </thead>
-
-    <tbody>
-
-        {% for sesion in sesiones %}
-
-        <tr>
-            <td>{{ sesion.pelicula.titulo }}</td>
-            <td>{{ sesion.sala }}</td>
-            <td>{{ sesion.fecha_sesion }}</td>
-            <td>{{ sesion.hora_sesion }}</td>
-            <td>
+<div class="table-responsive">
+    <table class="table table-dark table-striped align-middle border border-secondary">
+        <thead>
+            <tr>
+                <th>Película</th>
+                <th>Sala</th>
+                <th>Fecha</th>
+                <th>Hora</th>
                 {% if user|is_gestor %}
-                <button type="button" class="btn btn-warning btn-sm" data-bs-toggle="modal"
-                    data-bs-target="#modificarSesion{{ sesion.id }}">
-                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor"
-                        class="bi bi-pencil-square" viewBox="0 0 16 16">
-                        <path
-                            d="M15.502 1.94a.5.5 0 0 1 0 .706L14.459 3.69l-2-2L13.502.646a.5.5 0 0 1 .707 0l1.293 1.293zm-1.75 2.456-2-2L4.939 9.21a.5.5 0 0 0-.121.196l-.805 2.414a.25.25 0 0 0 .316.316l2.414-.805a.5.5 0 0 0 .196-.12l6.813-6.814z" />
-                        <path fill-rule="evenodd"
-                            d="M1 13.5A1.5 1.5 0 0 0 2.5 15h11a1.5 1.5 0 0 0 1.5-1.5v-6a.5.5 0 0 0-1 0v6a.5.5 0 0 1-.5.5h-11a.5.5 0 0 1-.5-.5v-11a.5.5 0 0 1 .5-.5H9a.5.5 0 0 0 0-1H2.5A1.5 1.5 0 0 0 1 2.5z" />
-                    </svg>
-                </button>
+                <th class="text-end">Acciones</th>
                 {% endif %}
-            </td>
-        </tr>
+            </tr>
+        </thead>
+        <tbody>
+            {% for sesion in sesiones %}
+            <tr>
+                <td class="fw-bold text-light">{{ sesion.pelicula.titulo }}</td>
+                <td>{{ sesion.sala }}</td>
+                <td>{{ sesion.fecha_sesion|date:"d/m/Y" }}</td>
+                <td>{{ sesion.hora_sesion|time:"H:i" }} hs</td>
+                {% if user|is_gestor %}
+                <td class="text-end">
+                    <button type="button" class="btn btn-warning btn-sm me-1" data-bs-toggle="modal" data-bs-target="#modificarSesion{{ sesion.id }}">
+                        <i class="bi bi-pencil-square"></i>
+                    </button>
+                    <button type="button" class="btn btn-danger btn-sm" data-bs-toggle="modal" data-bs-target="#eliminarSesion{{ sesion.id }}">
+                        <i class="bi bi-trash"></i>
+                    </button>
+                </td>
+                {% endif %}
+            </tr>
+            {% empty %}
+            <tr>
+                <td colspan="5" class="text-center text-muted py-4">No hay sesiones programadas.</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
 
-        {% endfor %}
-
-    </tbody>
-
-</table>
-
-<!-- Modal de modificar sesion -->
+<!-- MODALES (Modificar y Eliminar) -->
 {% for sesion in sesiones %}
 
-<div class="modal fade" id="modificarSesion{{ sesion.id }}" tabindex="-1">
-
+<!-- Modal Modificar -->
+<div class="modal fade" id="modificarSesion{{ sesion.id }}" tabindex="-1" aria-hidden="true">
     <div class="modal-dialog modal-dialog-centered modal-lg">
-        <div class="modal-content bg-dark text-white">
-
-            <div class="modal-header">
-                <h5 class="modal-title fw-bold">
-                    Modificar sesión
-                </h5>
-
+        <div class="modal-content bg-dark text-white border border-secondary">
+            <div class="modal-header border-secondary">
+                <h5 class="modal-title fw-bold text-warning">Modificar sesión</h5>
                 <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
             </div>
-
             <form method="POST" action="{% url 'modificar_sesion' sesion.pk %}">
-
                 {% csrf_token %}
-
                 <div class="modal-body">
-                    <div class="row">
-                        <!-- Bloque de pelicula -->
-                        <div class="col-md-6 mb-3">
-                            <div class="mb-3">
-                                <label for="pelicula{{ sesion.id }}" class="form-label">
-                                    Película
-                                </label>
-
-                                <select name="pelicula" id="pelicula{{ sesion.id }}" class="form-select">
-
-                                    {% for pelicula in peliculas %}
-                                    <option value="{{ pelicula.id }}" {% if pelicula.id == sesion.pelicula.id %} selected
-                                        {% endif %}>
-                                        {{ pelicula.titulo }}
-                                    </option>
-                                    {% endfor %}
-
-                                </select>
-                            </div>
+                    <div class="row g-3">
+                        <div class="col-md-6">
+                            <label for="pelicula{{ sesion.id }}" class="form-label">Película</label>
+                            <select name="pelicula" id="pelicula{{ sesion.id }}" class="form-select bg-dark text-white border-secondary">
+                                {% for pelicula in peliculas %}
+                                <option value="{{ pelicula.id }}" {% if pelicula.id == sesion.pelicula.id %}selected{% endif %}>
+                                    {{ pelicula.titulo }}
+                                </option>
+                                {% endfor %}
+                            </select>
                         </div>
-                        <!-- Bloque de sala -->
-                        <div class="col-md-6 mb3">
-                            <div class="mb-3">
-                                <label for="sala{{ sesion.id }}" class="form-label">
-                                    Sala
-                                </label>
-                                <select name="sala" id="sala{{ sesion.id }}" class="form-select">
-                                    {% for sala in salas %}
-                                    <option value="{{ sala.id }}" {% if sala.id == sesion.sala.id %} selected {% endif %}>
-                                        {{ sala.numero_sala }}
-                                    </option>
-                                    {% endfor %}
-                                </select>
-                            </div>
+                        <div class="col-md-6">
+                            <label for="sala{{ sesion.id }}" class="form-label">Sala</label>
+                            <select name="sala" id="sala{{ sesion.id }}" class="form-select bg-dark text-white border-secondary">
+                                {% for sala in salas %}
+                                <option value="{{ sala.id }}" {% if sala.id == sesion.sala.id %}selected{% endif %}>
+                                    {{ sala.numero_sala }}
+                                </option>
+                                {% endfor %}
+                            </select>
                         </div>
-                        <!-- Bloque de Fecha -->
-                        <div class="col-md-6 mb3">
-                            <div class="mb-3">
-                                <label>Fecha</label>
-                                <input type="date" name="fecha_sesion" class="form-control"
-                                    value="{{ sesion.fecha_sesion|date:'Y-m-d' }}">
-                            </div>
+                        <div class="col-md-6">
+                            <label class="form-label">Fecha</label>
+                            <input type="date" name="fecha_sesion" class="form-control bg-dark text-white border-secondary" value="{{ sesion.fecha_sesion|date:'Y-m-d' }}">
                         </div>
-                        <!-- Bloque de Hora -->
-                        <div class="col-md-6 mb-3">
-                            <div class="mb-3">
-                                <label>Hora</label>
-                                <input type="time" name="hora_sesion" class="form-control"
-                                    value="{{ sesion.hora_sesion|time:'H:i' }}">
-                            </div>
+                        <div class="col-md-6">
+                            <label class="form-label">Hora</label>
+                            <input type="time" name="hora_sesion" class="form-control bg-dark text-white border-secondary" value="{{ sesion.hora_sesion|time:'H:i' }}">
                         </div>
                     </div>
                 </div>
-
-                <div class="modal-footer">
-
-                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">
-                        Cancelar
-                    </button>
-
-                    <button type="submit" class="btn btn-warning">
-                        Guardar cambios
-                    </button>
-
+                <div class="modal-footer border-secondary">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+                    <button type="submit" class="btn btn-warning">Guardar cambios</button>
                 </div>
-
             </form>
-
         </div>
     </div>
-
 </div>
 
+<!-- Modal Eliminar -->
+{% if user|is_gestor %}
+<div class="modal fade" id="eliminarSesion{{ sesion.id }}" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content bg-dark text-white border border-secondary">
+            <div class="modal-header border-secondary">
+                <h5 class="modal-title text-danger fw-bold">Eliminar sesión</h5>
+                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+            </div>
+            <div class="modal-body">
+                <p class="mb-0">¿Estás seguro de que deseas eliminar la sesión de <strong>{{ sesion.pelicula.titulo }}</strong> en la <strong>{{ sesion.sala }}</strong> del <strong>{{ sesion.fecha_sesion|date:"d/m/Y" }}</strong> a las <strong>{{ sesion.hora_sesion|time:"H:i" }}</strong>?</p>
+            </div>
+            <div class="modal-footer border-secondary">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+                <form method="POST" action="{% url 'eliminar_sesion' sesion.pk %}">
+                    {% csrf_token %}
+                    <button type="submit" class="btn btn-danger">Sí, eliminar</button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+{% endif %}
+
 {% endfor %}
-
-<!-- Fin del modal de modificar sesion -->
-
-
 {% endblock %}

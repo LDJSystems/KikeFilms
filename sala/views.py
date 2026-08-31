@@ -10,6 +10,8 @@ from .forms import SesionForm
 # Create your views here.
 
 #Agregar Sesion
+@login_required
+@gestor_required
 def agregar_sesion(request):
     if request.method == 'POST':
         formulario = SesionForm(request.POST)
@@ -63,3 +65,16 @@ def modificar_sesion(request, pk):
         formulario = SesionForm(instance = sesion)
 
     return render(request, 'sala/lista_sesiones.html', {'formulario' : formulario})
+
+# Eliminar sesión
+@login_required
+@gestor_required
+def eliminar_sesion(request, pk):
+    sesion = get_object_or_404(Sesion, pk=pk)
+    
+    if request.method == 'POST':
+        sesion.delete()
+        messages.success(request, "¡Sesión eliminada con éxito!")
+        return redirect('lista_sesiones')
+        
+    return redirect('lista_sesiones')
