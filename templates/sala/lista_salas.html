@@ -1,0 +1,143 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="container my-4">
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <h2 class="text-white fw-bold">
+            <i class="bi bi-door-open me-2"></i>Gestión de Salas
+        </h2>
+        <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#modalNuevaSala">
+            <i class="bi bi-plus-lg me-1"></i> Nueva Sala
+        </button>
+    </div>
+
+    <!-- Mensajes de Django -->
+    {% if messages %}
+        {% for message in messages %}
+            <div class="alert alert-{{ message.tags }} alert-dismissible fade show" role="alert">
+                {{ message }}
+                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+            </div>
+        {% endfor %}
+    {% endif %}
+
+    <!-- Tabla de Salas -->
+    <div class="card bg-dark text-white border-secondary shadow-sm">
+        <div class="card-body p-0">
+            <div class="table-responsive">
+                <table class="table table-dark table-hover mb-0 align-middle">
+                    <thead class="table-borderless border-bottom border-secondary text-secondary">
+                        <tr>
+                            <th scope="col" class="ps-3">Número / Nombre</th>
+                            <th scope="col">Capacidad (Aforo)</th>
+                            <th scope="col" class="text-end pe-3">Acciones</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for sala in salas %}
+                            <tr>
+                                <td class="ps-3 fw-semibold">{{ sala.numero_sala }}</td>
+                                <td>{{ sala.capacidad }} espectadores</td>
+                                <td class="text-end pe-3">
+                                    <button type="button" class="btn btn-outline-warning btn-sm me-1" data-bs-toggle="modal" data-bs-target="#editarSala{{ sala.id }}">
+                                        <i class="bi bi-pencil"></i>
+                                    </button>
+                                    <button type="button" class="btn btn-outline-danger btn-sm" data-bs-toggle="modal" data-bs-target="#eliminarSala{{ sala.id }}">
+                                        <i class="bi bi-trash"></i>
+                                    </button>
+                                </td>
+                            </tr>
+
+                            <!-- Modal Editar Sala -->
+                            <div class="modal fade" id="editarSala{{ sala.id }}" tabindex="-1" aria-hidden="true">
+                                <div class="modal-dialog modal-dialog-centered">
+                                    <div class="modal-content bg-dark text-white border border-secondary">
+                                        <div class="modal-header border-secondary">
+                                            <h5 class="modal-title text-warning fw-bold">Editar {{ sala.numero_sala }}</h5>
+                                            <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+                                        </div>
+                                        <form method="POST" action="{% url 'modificar_sala' sala.pk %}">
+                                            {% csrf_token %}
+                                            <div class="modal-body text-start">
+                                                <div class="mb-3">
+                                                    <label class="form-label">Número o Nombre de Sala</label>
+                                                    <input type="text" name="numero_sala" value="{{ sala.numero_sala }}" class="form-control bg-dark text-white border-secondary" required>
+                                                </div>
+                                                <div class="mb-3">
+                                                    <label class="form-label">Capacidad de Aforo</label>
+                                                    <input type="number" name="capacidad" value="{{ sala.capacidad }}" class="form-control bg-dark text-white border-secondary" required>
+                                                </div>
+                                            </div>
+                                            <div class="modal-footer border-secondary">
+                                                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+                                                <button type="submit" class="btn btn-warning">Guardar Cambios</button>
+                                            </div>
+                                        </form>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Modal Eliminar Sala -->
+                            <div class="modal fade" id="eliminarSala{{ sala.id }}" tabindex="-1" aria-hidden="true">
+                                <div class="modal-dialog modal-dialog-centered">
+                                    <div class="modal-content bg-dark text-white border border-secondary">
+                                        <div class="modal-header border-secondary">
+                                            <h5 class="modal-title text-danger fw-bold">Eliminar {{ sala.numero_sala }}</h5>
+                                            <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+                                        </div>
+                                        <div class="modal-body text-start">
+                                            <p class="mb-0">¿Estás seguro de que deseas eliminar esta sala? Todas las sesiones asociadas a ella también se eliminarán.</p>
+                                        </div>
+                                        <div class="modal-footer border-secondary">
+                                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+                                            <form method="POST" action="{% url 'eliminar_sala' sala.pk %}">
+                                                {% csrf_token %}
+                                                <button type="submit" class="btn btn-danger">Eliminar</button>
+                                            </form>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        {% empty %}
+                            <tr>
+                                <td colspan="3" class="text-center py-4 text-muted">
+                                    No hay salas registradas aún.
+                                </td>
+                            </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Modal Nueva Sala -->
+<div class="modal fade" id="modalNuevaSala" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content bg-dark text-white border border-secondary">
+            <div class="modal-header border-secondary">
+                <h5 class="modal-title text-primary fw-bold">Agregar Nueva Sala</h5>
+                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+            </div>
+            <form method="POST" action="{% url 'agregar_sala' %}">
+                {% csrf_token %}
+                <div class="modal-body text-start">
+                    <div class="mb-3">
+                        <label class="form-label">Número o Nombre de Sala</label>
+                        {{ formulario.numero_sala }}
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label">Capacidad de Aforo</label>
+                        {{ formulario.capacidad }}
+                    </div>
+                </div>
+                <div class="modal-footer border-secondary">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+                    <button type="submit" class="btn btn-primary">Agregar Sala</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+{% endblock %}

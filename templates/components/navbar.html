@@ -18,6 +18,19 @@
                 <li class="nav-item">
                     <a class="nav-link" href="{% url 'listar_peliculas' %}">Cartelera</a>
                 </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="{% url 'lista_sesiones' %}">Sesiones</a>
+                </li>
+
+                <!-- SOLO PARA SUPERUSUARIOS -->
+                {% if user.is_authenticated and user.is_superuser %}
+                <li class="nav-item">
+                    <a class="nav-link text-white fw-bold" href="{% url 'lista_salas' %}">
+                        <i class="bi bi-door-open me-1"></i>Salas
+                    </a>
+                </li>
+                {% endif %}
+
                 <!-- OPCIÓN SOLO PARA ADMINS / GESTORES -->
                 {% if user|is_gestor %}
                 <li class="nav-item">
@@ -31,11 +44,12 @@
             <!-- Buscador -->
             <form class="d-flex me-3" role="search" method="GET" action="{% url 'listar_peliculas' %}">
                 <input class="form-control form-control-sm bg-dark text-white border-secondary me-2" type="search"
-                    placeholder="Buscar película..." aria-label="Search" name="q"
-                    value="{{ request.GET.q|default:'' }}" required>
+                    placeholder="Buscar película..." aria-label="Search" name="q" value="{{ request.GET.q|default:'' }}"
+                    required>
                 <button class="btn btn-outline-danger btn-sm text-nowrap" type="submit">Buscar</button>
             </form>
 
+            <!-- Sección de usuario / login -->
             <ul class="navbar-nav ms-3">
                 {% if user.is_authenticated %}
                 <li class="nav-item">
