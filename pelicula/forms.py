@@ -12,7 +12,7 @@ class PeliculaForm(forms.ModelForm):
             'director'          : forms.Select(attrs={'class': 'form-select'}),
             'genero'            : forms.SelectMultiple(attrs={'class': 'form-select'}),
             'duracion'          : forms.NumberInput(attrs={'class': 'form-control'}),
-            'fecha_lanzamiento' : forms.DateInput(format='%Y-%m-%d', attrs={'class': 'form-control', 'type': 'date'})
+            'fecha_lanzamiento' : forms.DateInput(format='%Y-%m-%d', attrs={'class': 'form-control', 'type': 'date'}),
         }
 
         fields = [
