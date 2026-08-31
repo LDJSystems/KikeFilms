@@ -22,11 +22,23 @@ def agregar_pelicula(request):
         formulario = PeliculaForm()
     return render(request, 'pelicula/nueva_pelicula.html', {'formulario' : formulario})
 
-#Listado de Peliculas
+#Listado de Peliculas (con búsqueda opcional)
 def listar_peliculas(request):
+    query = request.GET.get('q', '').strip()
+    buscando = len(query) > 0
+    resultados = None
+
+    if buscando:
+        resultados = Pelicula.objects.filter(titulo__icontains=query)
+
     peliculas = Pelicula.objects.all()
-    print(peliculas)
-    return render(request, 'pelicula/lista.html', {'peliculas' : peliculas})
+
+    return render(request, 'pelicula/lista.html', {
+        'peliculas': peliculas,
+        'resultados': resultados,
+        'q': query,
+        'buscando': buscando,
+    })
 
 #Modificar Pelicula
 @login_required
